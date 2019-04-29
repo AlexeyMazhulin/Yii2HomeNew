@@ -36,6 +36,7 @@ class ActivityComponent extends Component
 
         $model->file=$this->file_component->getUploadedFile($model,'file');
 
+
         if(!$model->validate()){
           //  print_r($model->GetErrors());
             return false;

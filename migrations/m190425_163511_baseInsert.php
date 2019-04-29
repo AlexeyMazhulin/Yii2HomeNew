@@ -15,13 +15,13 @@ class m190425_163511_baseInsert extends Migration
         $this->insert('users',[
             'id'=>1,
             'email'=>'test@test.ru',
-            'password_hash'=>'qwerqwer',
+            'password_hash'=>'qwer',
         ]);
 
         $this->insert('users',[
             'id'=>2,
             'email'=>'test1@test.ru',
-            'password_hash'=>'qwerqwer',
+            'password_hash'=>'qwer',
         ]);
 
         $this->batchInsert('activity',[
