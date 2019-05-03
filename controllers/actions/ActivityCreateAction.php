@@ -8,13 +8,21 @@ use app\components\ActivityComponent;
 use app\models\Activity;
 use yii\base\Action;
 use app\components\FileComponent;
+use yii\web\HttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
 class ActivityCreateAction extends Action
 {
+
+    public $rbac;
+
     public function run()
     {
+        if(!$this->rbac->canCreateActivity()){
+            throw new HttpException(403,'Access denied create activity');
+        }
+
         $model=\Yii::$app->activity->getModel();
         $comp=\Yii::createObject(['class'=>ActivityComponent::class,'activity_class'=>Activity::class,'file_component' => FileComponent::class]);
         if(\Yii::$app->request->isPost){
