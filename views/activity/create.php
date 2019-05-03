@@ -27,7 +27,7 @@
                 ['enableClientValidation'=> false,
                     'enableAjaxValidation' => true,
                                     ]);?>
-            <?=$form->field($model,'isBlocking')->checkbox();?>
+            <?=$form->field($model,'isBlocked')->checkbox();?>
             <?=$form->field($model,'repeatCountList')->dropDownList($model->getRepeatCountList());?>
             <?=$form->field($model,'repeatCount')->input('number');?>
             <?=$form->field($model,'file[]')->fileInput(['multiple' => true]);?>

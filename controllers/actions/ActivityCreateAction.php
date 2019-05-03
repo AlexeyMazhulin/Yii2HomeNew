@@ -26,11 +26,8 @@ class ActivityCreateAction extends Action
             }
 
         if($comp->createActivity($model)){
-                if(!$model->filename){
-                    return $this->controller->render('viewEmpty',['model' => $model]);
-                }else {
-                    return $this->controller->render('view', ['model' => $model]);
-                }
+                return $this->controller->render('view',['model' => $model]);
+
         };
 
         }

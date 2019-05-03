@@ -2,6 +2,7 @@
 
 use yii\db\Migration;
 
+
 /**
  * Class m190425_163511_baseInsert
  */
