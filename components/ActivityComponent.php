@@ -34,14 +34,14 @@ class ActivityComponent extends Component
 
     public function createActivity(&$model):bool{
 
-        $model->file=$this->file_component->getUploadedFile($model,'file');
+        $model->user_id=\Yii::$app->user->id;
 
-        if(!$model->validate()){
-          //  print_r($model->GetErrors());
+        if(!$model->save()){
             return false;
         };
 
 
+        $model->file=$this->file_component->getUploadedFile($model,'file');
 
         if($model->file) {
             foreach ($model->file as $oneFile) {
@@ -60,6 +60,8 @@ class ActivityComponent extends Component
 
             }
         }
+
+
 
         return true;
     }

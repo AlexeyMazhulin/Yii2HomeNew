@@ -13,6 +13,11 @@
 
 
         <?php $form=\yii\bootstrap\ActiveForm::begin([
+            'options' => ['class' => 'form-horizontal', 'enctype' => 'multipart/form-data'],
+            'fieldConfig' => [
+                'options' => ['class' => 'input-group'],
+                'inputOptions' => ['class' => 'form-control']
+            ],
             ]);?>
             <?=$form->field($model,'title')?>
             <?=$form->field($model,'description')->textarea(['data-attr'=>2])?>
@@ -22,10 +27,10 @@
                 ['enableClientValidation'=> false,
                     'enableAjaxValidation' => true,
                                     ]);?>
-            <?=$form->field($model,'isBlocking')->checkbox();?>
+            <?=$form->field($model,'isBlocked')->checkbox();?>
             <?=$form->field($model,'repeatCountList')->dropDownList($model->getRepeatCountList());?>
             <?=$form->field($model,'repeatCount')->input('number');?>
-            <?=$form->field($model,'file')->fileInput(['multiple' => true,]);?>
+            <?=$form->field($model,'file[]')->fileInput(['multiple' => true]);?>
         <div class="form-group">
             <button class="btn btn-default" type="submit">Создать</button>
         </div>
