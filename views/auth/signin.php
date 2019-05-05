@@ -8,6 +8,7 @@
         <?php $form=\yii\bootstrap\ActiveForm::begin([
             'method' => 'POST'
         ]);?>
+        <p>Авторизация</p>
         <?=$form->field($model,'email')?>
         <?=$form->field($model,'password')->passwordInput() ?>
 

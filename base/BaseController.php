@@ -17,7 +17,7 @@ class BaseController extends Controller
     public function beforeAction($action)
     {
        if(\Yii::$app->user->isGuest){
-           throw new HttpException(401,'Need authorisation');
+           return $this->redirect(['/auth/sign-in']);
        }
        return parent::beforeAction($action);
     }
