@@ -7,7 +7,7 @@ use yii\base\Component;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 use app\models\Activity;
-
+use app\components\RbacComponent;
 
 
 class ActivityComponent extends Component
@@ -65,6 +65,61 @@ class ActivityComponent extends Component
 
         return true;
     }
+
+    public function getColumns()
+    {
+        $model = $this->getModel();
+        $includedInListColumns = [
+            'id' => 'ID события',
+            'title' => $model->getAttributeLabel('title'),
+            'dateStart' => $model->getAttributeLabel('dateStart'),
+            'isBlocked' => $model->getAttributeLabel('isBlocked'),
+        ];
+        return $includedInListColumns;
+    }
+    public function getAllActivities()
+    {
+        $model = $this->getModel();
+        $filter = null;
+        /**
+         * @var $rbacComponent RbacComponent
+         */
+        $rbacComponent = \Yii::createObject([
+            'class' => RbacComponent::class,]);
+        $viewAll = $rbacComponent->canViewAllActivities();
+        if(!$viewAll) {
+            $viewMy = $rbacComponent->canViewOwnActivities(\Yii::$app->user->getId());
+        }
+        $model = $model::find();
+        if(!$viewAll && $viewMy) {
+            $model = $model->where(['user_id' => \Yii::$app->user->getId()]);
+        } elseif(!$viewAll) {
+            throw new HttpException(403, 'You have no permissions to read the list');
+        }
+        $arData = $model->asArray()->all();
+        $isBlockingCode = 'isBlocked';
+        $startDateCode = 'dateStart';
+        foreach ($arData as $key => $arDatum) {
+            $arData[$key][$isBlockingCode] = $arDatum[$isBlockingCode] == true ? 'Да' : "Нет";
+            $arData[$key][$startDateCode] = Date::convertFromFormatToString($arDatum[$startDateCode], "&mdash;");
+        }
+        return $arData;
+    }
+    public function getActivityById($id)
+    {
+        $model = $this->getModel();
+        $model = $model::find()
+            ->select(['*',])
+            ->where(['id' => $id])
+            ->one();
+        $files = $model->getActivityFiles()->asArray()->all();
+        $arActivity = $model->getAttributes();
+        foreach ($files as $file) {
+            $arActivity['uploadedFile'][] = $file['file_path'];
+        }
+        return $arActivity;
+    }
+
 
 
 }

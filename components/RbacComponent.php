@@ -32,6 +32,9 @@ class RbacComponent extends Component
         $viewAllActivity=$authManager->createPermission('viewAllActivity');
         $viewAllActivity->description='Просмотр любых активностей';
 
+        $editAllActivities = $authManager->createPermission('editAllActivities');
+        $editAllActivities->description = 'Редактирование событий';
+
         $viewOwnerRule=new ViewOwnerActivityRule();
         $authManager->add($viewOwnerRule);
 
@@ -39,18 +42,28 @@ class RbacComponent extends Component
         $viewOwnerActivity->description='Просмотр только своих активностей';
         $viewOwnerActivity->ruleName=$viewOwnerRule->name;
 
+
+        $editOwnActivities = $authManager->createPermission('editOnwActivities');
+        $editOwnActivities->description = 'Редактирование своих событий';
+        $editOwnActivities->ruleName = $viewOwnerRule->name;
+
+
         $authManager->add($createActivity);
         $authManager->add($viewAllActivity);
         $authManager->add($viewOwnerActivity);
+        $authManager->add($editAllActivities);
+        $authManager->add($editOwnActivities);
 
         $authManager->addChild($user,$createActivity);
         $authManager->addChild($user,$viewOwnerActivity);
+        $authManager->addChild($user, $editOwnActivities);
 
         $authManager->addChild($admin,$user);
         $authManager->addChild($admin,$viewAllActivity);
+        $authManager->addChild($admin, $editAllActivities);
 
-        $authManager->assign($user,4);
-        $authManager->assign($admin,3);
+        $authManager->assign($user,1);
+        $authManager->assign($admin,2);
 
     }
 
@@ -70,5 +83,48 @@ class RbacComponent extends Component
         return false;
 
     }
+
+    public function canViewOwnActivities($ownerId)
+    {
+        if(\Yii::$app->user->can('viewOwnerActivity',['ownerId' => $ownerId])){
+            return true;
+        };
+
+        return false;
+
+    }
+
+    public function canEditActivity(int $ownerId)
+    {
+        if ($this->canEditAllActivities()) {
+            return true;
+        }
+        return $this->canEditOwnActivities($ownerId);
+    }
+
+    public function canEditAllActivities()
+    {
+        {
+            if(\Yii::$app->user->can('editAllActivities')){
+                return true;
+            };
+
+            return false;
+
+        }
+    }
+    public function canEditOwnActivities(int $ownerId)
+    {
+
+            if(\Yii::$app->user->can('editOnwActivities',['ownerId'=>$ownerId])){
+                return true;
+            };
+
+            return false;
+
+    }
+
+
+
 
 }
