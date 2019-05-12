@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' =>Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -66,6 +66,8 @@ AppAsset::register($this);
         <?= $content ?>
     </div>
 </div>
+
+
 
 <footer class="footer">
     <div class="container">

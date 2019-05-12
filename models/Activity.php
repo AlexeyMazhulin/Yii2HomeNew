@@ -9,24 +9,14 @@ use yii\base\Model;
 use app\components\FileComponent;
 
 
-class Activity extends Model
+class Activity extends ActivityBase
 {
-    public $title;
-    public $description;
-    public $dateStart;
-
-   // public $isRepeatable;
     public $repeatCount;
     private $repeatCountList=[0=>'не повторять',1=> 'Ежедневно',2=> 'Еженедельно'];
 
     public function getRepeatCountList(){
         return $this->repeatCountList;
     }
-
-    public $email;
-    public $useNotification;
-
-    public $isBlocking;
 
     public $file;
     public $filename;
@@ -46,9 +36,9 @@ class Activity extends Model
 
     public function rules()
     {
-        return [
+        return array_merge([
             ['title','required'],
-            ['description','string','min'=>10],
+            ['description','string','min'=>3],
             ['dateStart','date','format' => 'Y-m-d'],
             ['email','email'],
             ['email','required','when' => function($model){
@@ -56,11 +46,11 @@ class Activity extends Model
             }],
             [['title'],StopTitleValidator::class],
             ['repeatCount','number','min' => 0],
-            [['isBlocking','useNotification'],'boolean'],
+            [['isBlocked','useNotification'],'boolean'],
             [['file'],'file','extensions'=>['jpg','png','pdf'],'maxFiles' => 5],
             [['filename'],'string']
 
-        ];
+        ],parent::rules());
     }
 
     public function attributeLabels()
@@ -71,7 +61,7 @@ class Activity extends Model
             'dateStart' => 'Дата начала',
             'repeatCountList' => 'Повторять',
             'repeatCount' => 'Количество повторов',
-            'isBlocking' => 'Блоктрующее событие'
+            'isBlocked' => 'Блоктрующее событие'
         ];
     }
 }
